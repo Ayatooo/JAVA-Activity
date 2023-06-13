@@ -20,7 +20,7 @@ public class Main {
         MongoCollection<Document> collection = Connection.client("activity", "activity");
         ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(collection);
         // save(activityRepository);
-        // getAll(activityRepository);
+        getAll(activityRepository);
         // getById(activityRepository);
     }
 
@@ -45,7 +45,7 @@ public class Main {
         for (Document activity : activities.find()) {
             activityDTOList.add(documentToActivity(activity));
         }
-        activityDTOList.forEach(activityDTO -> log.warn(activityDTO.getName()));
+        activityDTOList.forEach(activityDTO -> log.warn(activityDTO.getId().toString()));
     }
 
     private static void getById(ActivityRepositoryImpl activityRepository) {

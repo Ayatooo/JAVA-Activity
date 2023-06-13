@@ -16,6 +16,7 @@ public class ActivityMapper {
 
     public static ActivityDTO documentToActivity(Document document) {
         return new ActivityDTO(
+                document.getObjectId("_id"),
                 document.getString("name"),
                 document.getInteger("duration"),
                 document.getDate("date"),
