@@ -1,6 +1,7 @@
 package fr.ayato.activity.repository;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import fr.ayato.activity.model.ActivityDTO;
 import jdk.dynalink.linker.LinkerServices;
@@ -33,5 +34,10 @@ public class ActivityRepositoryImpl implements ActivityRepository {
         @Override
         public ActivityDTO getOne(String id) {
             return documentToActivity(Objects.requireNonNull(this.collection.find(new Document("_id", new ObjectId(id))).first()));
+        }
+
+        @Override
+        public DeleteResult deleteOne(String id) {
+            return this.collection.deleteOne(new Document("_id", new ObjectId(id)));
         }
 }
