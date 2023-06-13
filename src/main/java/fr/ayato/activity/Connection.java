@@ -1,0 +1,23 @@
+package fr.ayato.activity;
+
+import com.mongodb.client.MongoClient;
+import com.mongodb.client.MongoClients;
+import com.mongodb.client.MongoCollection;
+import lombok.extern.slf4j.Slf4j;
+import org.bson.Document;
+
+@Slf4j
+public class Connection {
+
+    public static MongoCollection<Document> client(String databaseName, String collectionName) {
+        try {
+            String connectionString = "mongodb+srv://ayatooo:app-test-password@cluster0.qflwlxh.mongodb.net/?retryWrites=true&w=majority";
+            MongoClient client = MongoClients.create(connectionString);
+            MongoCollection<Document> collection = client.getDatabase(databaseName).getCollection(collectionName);
+            return collection;
+        } catch (Exception e) {
+            log.error("Error while connecting to MongoDB", e);
+            throw new RuntimeException(e);
+        }
+    }
+}

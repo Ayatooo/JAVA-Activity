@@ -1,0 +1,8 @@
+
+
+java:S1488"bImmediately return this expression instead of assigning it to the temporary variable "collection".(α³¦8ώ­ÿ1
+f
+java:S2095"IUse try-with-resources or close this "MongoClient" in a "finally" clause.(ƒ“…8π ¬ÿ1
+V
+java:S1118
+":Add a private constructor to hide the implicit public one.(συΨs8Ρ²ªÿ1
