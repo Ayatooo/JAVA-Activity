@@ -5,6 +5,7 @@ import com.mongodb.client.MongoCollection;
 import fr.ayato.activity.controller.ActivityControllerImpl;
 import fr.ayato.activity.model.ActivityDTO;
 import fr.ayato.activity.repository.ActivityRepositoryImpl;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
@@ -17,7 +18,8 @@ import static fr.ayato.activity.mapper.ActivityMapper.documentToActivity;
 @Slf4j
 public class Main {
     public static void main(String[] args) {
-        MongoCollection<Document> collection = Connection.client("activity", "activity");
+        Dotenv dotenv = Dotenv.configure().load();
+        MongoCollection<Document> collection = Connection.client(dotenv.get("DB_NAME"), dotenv.get("DB_COLLECTION"));
         ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(collection);
         // save(activityRepository);
         getAll(activityRepository);

@@ -13,7 +13,7 @@ public class Connection {
     public static MongoCollection<Document> client(String databaseName, String collectionName) {
         try {
             Dotenv dotenv = Dotenv.configure().load();
-            String connectionString = dotenv.get("MONGO");
+            String connectionString = dotenv.get("MONGODB_URI");
             MongoClient client = MongoClients.create(connectionString);
             MongoCollection<Document> collection = client.getDatabase(databaseName).getCollection(collectionName);
             return collection;
