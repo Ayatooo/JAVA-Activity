@@ -24,7 +24,8 @@ public class Main {
         //save(activityRepository);
         //getAll(activityRepository);
         //getById(activityRepository, "648840c1020c1b00db0914ed");
-        deleteById(activityRepository, "648840c1020c1b00db0914ed");
+        //deleteById(activityRepository, "648840c1020c1b00db0914ed");
+
     }
 
     private static void save(ActivityRepositoryImpl activityRepository) {
