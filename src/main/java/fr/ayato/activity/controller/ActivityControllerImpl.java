@@ -1,6 +1,7 @@
 package fr.ayato.activity.controller;
 
 import com.mongodb.client.MongoCollection;
+import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import fr.ayato.activity.model.ActivityDTO;
 import fr.ayato.activity.repository.ActivityRepository;
@@ -26,5 +27,10 @@ public class ActivityControllerImpl implements ActivityController {
     @Override
     public MongoCollection<Document> getAll() {
         return this.activityRepository.getAll();
+    }
+
+    @Override
+    public DeleteResult deleteOne(String id) {
+        return this.activityRepository.deleteOne(id);
     }
 }

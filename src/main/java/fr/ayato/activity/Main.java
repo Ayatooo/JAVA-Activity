@@ -21,9 +21,10 @@ public class Main {
         Dotenv dotenv = Dotenv.configure().load();
         MongoCollection<Document> collection = Connection.client(dotenv.get("DB_NAME"), dotenv.get("DB_COLLECTION"));
         ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(collection);
-        // save(activityRepository);
-        getAll(activityRepository);
-        // getById(activityRepository);
+        //save(activityRepository);
+        //getAll(activityRepository);
+        //getById(activityRepository, "648840c1020c1b00db0914ed");
+        //deleteById(activityRepository, "648840c1020c1b00db0914ed");
     }
 
     private static void save(ActivityRepositoryImpl activityRepository) {
@@ -37,7 +38,7 @@ public class Main {
 
         ActivityControllerImpl activityController = new ActivityControllerImpl(activityRepository);
         String id = activityController.saveActivity(activity);
-        log.info(id);
+        log.info("Actvity created", id);
     }
 
     private static void getAll(ActivityRepositoryImpl activityRepository) {
@@ -47,13 +48,18 @@ public class Main {
         for (Document activity : activities.find()) {
             activityDTOList.add(documentToActivity(activity));
         }
-        activityDTOList.forEach(activityDTO -> log.warn(activityDTO.getId().toString()));
+        activityDTOList.forEach(activityDTO -> log.info(activityDTO.getId().toString()));
     }
 
-    private static void getById(ActivityRepositoryImpl activityRepository) {
+    private static void getById(ActivityRepositoryImpl activityRepository, String id) {
         ActivityControllerImpl activityController = new ActivityControllerImpl(activityRepository);
-        ActivityDTO activityDTO = activityController.getOne("6488323bd229d50706615ff2");
+        ActivityDTO activityDTO = activityController.getOne(id);
         log.info(activityDTO.getName());
     }
 
+    private static void deleteById(ActivityRepositoryImpl activityRepository, String id) {
+        ActivityControllerImpl activityController = new ActivityControllerImpl(activityRepository);
+        activityController.deleteOne(id);
+        log.info("Activity deleted");
+    }
 }
