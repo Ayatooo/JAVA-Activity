@@ -30,12 +30,11 @@ public class Window extends JFrame {
         Container contentPane = getContentPane();
 
         ActivityForm activityForm = new ActivityForm();
-        activityForm.getTextFieldDuration().setText("Coucou");
         for (Effort effort : Effort.values()) {
             activityForm.getComboBoxRpe().addItem(effort);
         }
         activityForm.getValiderButton().setActionCommand("Valider");
-        activityForm.getValiderButton().addActionListener(new ButtonFormListner());
+        activityForm.getValiderButton().addActionListener(new ButtonFormListner(activityForm));
         activityForm.getFermerButton().setActionCommand("Fermer");
         activityForm.getFermerButton().addActionListener(new ButtonListner());
 
@@ -60,21 +59,46 @@ public class Window extends JFrame {
         ActivityControllerImpl activityController;
         ActivityRepositoryImpl activityRepository;
         MongoCollection<Document> collection;
-        public ButtonFormListner() {
+        ActivityForm activityForm;
+        private String name;
+        private int duration;
+        private Date date;
+        private int rpe;
+        private int marge;
+        public ButtonFormListner(ActivityForm activityForm) {
             this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION"));
             this.activityRepository = new ActivityRepositoryImpl(this.collection);
             this.activityController = new ActivityControllerImpl(this.activityRepository);
+            this.activityForm = activityForm;
         }
         public void actionPerformed(ActionEvent e) {
+            this.name = this.activityForm.getTextFieldName().getText();
+            this.duration = (int)this.activityForm.getSpinnerDuration().getValue();
+            this.date = new Date();
+            this.rpe = this.activityForm.getComboBoxRpe().getSelectedIndex();
+            this.marge = this.rpe * this.duration;
+
             ActivityDTO activity = new ActivityDTO(
-                    "rommmmm",
-                    60,
+                    this.name,
+                    this.duration,
                     new Date(),
-                    8,
-                    5
+                    this.rpe,
+                    this.marge
             );
             String id = activityController.saveActivity(activity);
             log.info("Actvity created", id);
+
+            JDialog dialog = new JDialog();
+            JPanel panel = new JPanel();
+            JLabel label = new JLabel("Activité créée avec succès");
+            JButton button = new JButton("Fermer");
+            button.setActionCommand("Fermer");
+            button.addActionListener(new ButtonListner());
+            panel.add(label);
+            panel.add(button, BorderLayout.SOUTH);
+            dialog.add(panel);
+            dialog.setSize(200, 100);
+            dialog.setVisible(true);
         }
     }
 
