@@ -17,8 +17,8 @@ import java.awt.event.ActionListener;
 import java.util.Date;
 
 @Slf4j
-public class Window extends JFrame {
-    public Window(){
+public class WindowCreateActivity extends JFrame {
+    public WindowCreateActivity(){
         super("Petite fenêtre bien sympa");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int screenHeightSize = tk.getScreenSize().height;
@@ -42,7 +42,6 @@ public class Window extends JFrame {
         contentPane.add(activityForm.getRootPanel(), BorderLayout.CENTER);
 
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
     }
 
@@ -93,16 +92,29 @@ public class Window extends JFrame {
             JLabel label = new JLabel("Activité créée avec succès");
             JButton button = new JButton("Fermer");
             button.setActionCommand("Fermer");
-            button.addActionListener(new ButtonListner());
+            button.addActionListener(new ButtonDialogListner(dialog));
             panel.add(label);
-            panel.add(button, BorderLayout.SOUTH);
+            panel.add(button);
             dialog.add(panel);
             dialog.setSize(200, 100);
             dialog.setVisible(true);
         }
     }
 
+    class ButtonDialogListner implements ActionListener {
+        JDialog dialog;
+        public ButtonDialogListner(JDialog dialog) {
+            this.dialog = dialog;
+        }
+        public void actionPerformed(ActionEvent e) {
+            if(e.getActionCommand().equals("Fermer")){
+                this.dialog.dispose();
+                JFrame window = new WindowCreateActivity();
+            }
+        }
+    }
+
     public static void main(String[] args) {
-        JFrame window = new Window();
+        JFrame window = new WindowCreateActivity();
     }
 }
