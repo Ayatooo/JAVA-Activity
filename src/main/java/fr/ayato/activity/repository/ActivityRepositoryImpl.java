@@ -4,10 +4,8 @@ import com.mongodb.client.MongoCollection;
 import com.mongodb.client.result.DeleteResult;
 import com.mongodb.client.result.InsertOneResult;
 import fr.ayato.activity.model.ActivityDTO;
-import jdk.dynalink.linker.LinkerServices;
 import org.bson.Document;
 import org.bson.types.ObjectId;
-
 import java.util.Objects;
 
 import static fr.ayato.activity.mapper.ActivityMapper.activityToDocument;
