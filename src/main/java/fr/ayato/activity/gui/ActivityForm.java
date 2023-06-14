@@ -11,7 +11,8 @@ public class ActivityForm {
     private JButton validerButton;
     private JTextField textFieldDate;
     private JTextField textFieldName;
-    private JTextField textFieldDuration;
     private JComboBox comboBoxRpe;
     private JPanel rootPanel;
+    private JButton fermerButton;
+    private JSpinner spinnerDuration;
 }
