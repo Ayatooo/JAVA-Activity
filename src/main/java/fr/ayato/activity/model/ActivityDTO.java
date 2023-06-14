@@ -5,21 +5,21 @@ import org.bson.types.ObjectId;
 
 import java.util.Date;
 
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ActivityDTO {
-    @Getter
     private ObjectId id;
-    @Getter @Setter
+    @Setter
     private String name;
-    @Getter @Setter
+    @Setter
     private int duration;
-    @Getter @Setter
+    @Setter
     private Date date;
-    @Getter @Setter
+    @Setter
     private int rpe;
-    @Getter @Setter
+    @Setter
     private int charge;
 
     public ActivityDTO(String name, int duration, Date date, int rpe, int charge) {

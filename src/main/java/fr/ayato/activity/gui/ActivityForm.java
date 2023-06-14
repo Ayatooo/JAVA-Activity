@@ -14,4 +14,5 @@ public class ActivityForm {
     private JTextField textFieldDuration;
     private JComboBox comboBoxRpe;
     private JPanel rootPanel;
+    private JButton fermerButton;
 }
