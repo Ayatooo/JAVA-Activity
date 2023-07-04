@@ -35,7 +35,7 @@ public class WindowListActivities extends JFrame {
         this.activityController = new ActivityControllerImpl(activityRepository);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(600, 400);
+        setSize(600, 600);
         setLocationRelativeTo(null);
 
         Container contentPane = getContentPane();
@@ -51,7 +51,6 @@ public class WindowListActivities extends JFrame {
 
 
         JButton buttonBack = new JButton("Retour");
-        buttonBack.setPreferredSize(new Dimension(200, 50));
         buttonBack.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -77,6 +76,7 @@ public class WindowListActivities extends JFrame {
         buttonPanel.add(sortButton);
         buttonPanel.add(addButton);
         buttonPanel.add(filterButton);
+        buttonPanel.add(buttonBack);
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
         refreshActivityList(textArea);
