@@ -10,13 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.bson.Document;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.time.DayOfWeek;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalAdjusters;
 import java.util.*;
 import java.util.List;
 
@@ -61,7 +55,7 @@ public class WindowListActivities extends JFrame {
             new WindowCreateActivity();
         });
 
-        JButton filterButton = new JButton("Cette semaine");
+        JButton filterButton = new JButton("Filtrer par semaine");
         filterButton.addActionListener(e -> filterActivitiesByWeek(textArea));
 
         JPanel buttonPanel = new JPanel(new FlowLayout());
@@ -111,6 +105,7 @@ public class WindowListActivities extends JFrame {
     }
 
     private void sortActivitiesByDate(JTextArea textArea) {
+        textArea.setText("");
         try {
             List<ActivityDTO> activityDTOList = getActivityList();
             sortActivitiesByDate(activityDTOList);
@@ -132,35 +127,48 @@ public class WindowListActivities extends JFrame {
 
     private void filterActivitiesByWeek(JTextArea textArea) {
         try {
-            LocalDate currentDate = LocalDate.now();
-            LocalDate startDate = currentDate.with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY));
-            LocalDate endDate = currentDate.with(TemporalAdjusters.nextOrSame(DayOfWeek.SUNDAY));
+            int currentYear = Calendar.getInstance().get(Calendar.YEAR);
 
-            List<ActivityDTO> activityDTOList = getActivityList();
-            List<ActivityDTO> filteredList = new ArrayList<>();
-
-            Date startDateAsDate = Date.from(startDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date endDateAsDate = Date.from(endDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-
-            for (ActivityDTO activityDTO : activityDTOList) {
-                Date activityDate = activityDTO.getDate();
-                if (activityDate.after(startDateAsDate) && activityDate.before(endDateAsDate)) {
-                    filteredList.add(activityDTO);
-                }
+            List<Integer> weekNumbers = new ArrayList<>();
+            for (int i = 1; i <= 52; i++) {
+                weekNumbers.add(i);
             }
 
-            textArea.setText("");
-            if (filteredList.isEmpty()) {
-                textArea.setText("Aucune activité trouvée pour la semaine sélectionnée.");
-            } else {
-                displayActivities(textArea, filteredList);
+            Integer selectedWeekNumber = (Integer) JOptionPane.showInputDialog(this,
+                    "Sélectionnez le numéro de semaine :", "Filtrer par semaine",
+                    JOptionPane.QUESTION_MESSAGE, null, weekNumbers.toArray(), weekNumbers.get(0));
+
+            if (selectedWeekNumber != null) {
+                Calendar calendar = Calendar.getInstance();
+                calendar.set(Calendar.YEAR, currentYear);
+                calendar.set(Calendar.WEEK_OF_YEAR, selectedWeekNumber);
+                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                Date startDate = calendar.getTime();
+                calendar.add(Calendar.DAY_OF_WEEK, 6);
+                Date endDate = calendar.getTime();
+
+                List<ActivityDTO> activityDTOList = getActivityList();
+                List<ActivityDTO> filteredList = new ArrayList<>();
+
+                for (ActivityDTO activityDTO : activityDTOList) {
+                    Date activityDate = activityDTO.getDate();
+                    if (!activityDate.before(startDate) && !activityDate.after(endDate)) {
+                        filteredList.add(activityDTO);
+                    }
+                }
+
+                textArea.setText("");
+                if (filteredList.isEmpty()) {
+                    textArea.setText("Aucune activité trouvée pour la semaine sélectionnée.");
+                } else {
+                    displayActivities(textArea, filteredList);
+                }
             }
         } catch (Exception e) {
             log.error("Failed to filter activity list: {}", e.getMessage());
             JOptionPane.showMessageDialog(this, "Erreur lors du filtrage de la liste des activités.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(WindowListActivities::new);
