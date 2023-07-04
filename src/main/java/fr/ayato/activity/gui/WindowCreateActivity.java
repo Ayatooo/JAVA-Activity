@@ -38,7 +38,7 @@ public class WindowCreateActivity extends JFrame {
             activityForm.getComboBoxRpe().addItem(effort);
         }
         activityForm.getValiderButton().setActionCommand("Valider");
-        activityForm.getValiderButton().addActionListener(new ButtonFormListner(activityForm));
+        activityForm.getValiderButton().addActionListener(new ButtonFormListner(activityForm, this));
         activityForm.getFermerButton().setActionCommand("Fermer");
         activityForm.getFermerButton().addActionListener(new ButtonListner());
 
@@ -67,11 +67,13 @@ public class WindowCreateActivity extends JFrame {
         private Date date;
         private int rpe;
         private int marge;
-        public ButtonFormListner(ActivityForm activityForm) {
+        JFrame frame;
+        public ButtonFormListner(ActivityForm activityForm, JFrame frame) {
             this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
             this.activityRepository = new ActivityRepositoryImpl(this.collection);
             this.activityController = new ActivityControllerImpl(this.activityRepository);
             this.activityForm = activityForm;
+            this.frame = frame;
         }
         public void actionPerformed(ActionEvent e) {
             this.name = this.activityForm.getTextFieldName().getText();
@@ -103,7 +105,7 @@ public class WindowCreateActivity extends JFrame {
             JLabel label = new JLabel("Activité créée avec succès");
             JButton button = new JButton("Fermer");
             button.setActionCommand("Fermer");
-            button.addActionListener(new ButtonDialogListner(dialog));
+            button.addActionListener(new ButtonDialogListner(dialog, this.frame));
             panel.add(label);
             panel.add(button);
             dialog.add(panel);
@@ -114,11 +116,14 @@ public class WindowCreateActivity extends JFrame {
 
     class ButtonDialogListner implements ActionListener {
         JDialog dialog;
-        public ButtonDialogListner(JDialog dialog) {
+        JFrame window;
+        public ButtonDialogListner(JDialog dialog, JFrame window) {
             this.dialog = dialog;
+            this.window = window;
         }
         public void actionPerformed(ActionEvent e) {
             if(e.getActionCommand().equals("Fermer")){
+                this.window.dispose();
                 this.dialog.dispose();
                 JFrame window = new WindowCreateActivity();
             }
