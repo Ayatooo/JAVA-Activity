@@ -90,15 +90,6 @@
         </constraints>
         <properties/>
       </component>
-<<<<<<< HEAD
-=======
-      <component id="f51a9" class="javax.swing.JSpinner" binding="spinnerDuration">
-        <constraints>
-          <grid row="2" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
-        </constraints>
-        <properties/>
-      </component>
->>>>>>> 46cb78e50206c4b062431e99293000b766050529
     </children>
   </grid>
 </form>

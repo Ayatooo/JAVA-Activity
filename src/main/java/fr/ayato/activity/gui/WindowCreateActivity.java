@@ -65,7 +65,7 @@ public class WindowCreateActivity extends JFrame {
         private int rpe;
         private int marge;
         public ButtonFormListner(ActivityForm activityForm) {
-            this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION"));
+            this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
             this.activityRepository = new ActivityRepositoryImpl(this.collection);
             this.activityController = new ActivityControllerImpl(this.activityRepository);
             this.activityForm = activityForm;

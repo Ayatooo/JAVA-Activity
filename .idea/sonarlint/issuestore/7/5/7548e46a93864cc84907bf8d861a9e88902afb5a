@@ -1,0 +1,14 @@
+
+c
+java:S1854"FRemove this useless assignment to local variable "activityRepository".(÷®∂π8‰∫Ï«ã1
+T
+java:S1481"7Remove this unused "activityRepository" local variable.(÷®∂π8Ê∫Ï«ã1
+]	java:S125"<This block of commented-out lines of code should be removed.(óöÂ´¯ˇˇˇˇ8Ê∫Ï«ã1
+K
+java:S1144")Remove this unused private "save" method.(¯˝Ä´ˇˇˇˇˇ8Í∫Ï«ã1
+M
+java:S1144-"+Remove this unused private "getAll" method.(√∏”Ù˛ˇˇˇˇ8´£ƒ•ã1
+I
+java:S11447",Remove this unused private "getById" method.(≤úﬂ√8Íù®•ã1
+Q
+java:S1144="/Remove this unused private "deleteById" method.(µ¬îÀ˝ˇˇˇˇ8ı€ƒ•ã1

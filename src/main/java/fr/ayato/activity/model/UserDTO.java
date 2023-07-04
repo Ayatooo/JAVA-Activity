@@ -20,4 +20,11 @@ public class UserDTO {
     private Date birthdate;
     @Setter
     private String sexe;
+
+    public UserDTO(String name, String firstname, Date birthdate, String sexe) {
+        this.name = name;
+        this.firstname = firstname;
+        this.birthdate = birthdate;
+        this.sexe = sexe;
+    }
 }
