@@ -29,15 +29,7 @@ public class WindowListActivities extends JFrame {
         this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
         this.activityRepository = new ActivityRepositoryImpl(this.collection);
         this.activityController = new ActivityControllerImpl(this.activityRepository);
-        //MongoCollection<Document> activities = activityController.getAll();
-        //List<ActivityDTO> activityDTOList = new ArrayList<>();
-        //try {
-        //  for (Document activity : activities.find()) {
-        //      activityDTOList.add(documentToActivity(activity));
-        //  }
-        //} catch (Exception e) {
-        //}
-        //activityDTOList.forEach(activityDTO -> log.info(activityDTO.getName()));
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(600, 400);
         setLocationRelativeTo(null);
@@ -52,8 +44,16 @@ public class WindowListActivities extends JFrame {
 
         JButton refreshButton = new JButton("Actualiser");
         refreshButton.addActionListener(e -> refreshActivityList(textArea));
-        contentPane.add(refreshButton, BorderLayout.SOUTH);
+        JButton addButton = new JButton("Ajouter");
+        addButton.addActionListener(e -> {
+            dispose(); // Ferme la fenêtre actuelle
+            new WindowCreateActivity(); // Ouvre la fenêtre de création d'activités
+        });
 
+        JPanel buttonPanel = new JPanel(new FlowLayout());
+        buttonPanel.add(addButton);
+        buttonPanel.add(refreshButton);
+        contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
         refreshActivityList(textArea);
 
@@ -75,11 +75,11 @@ public class WindowListActivities extends JFrame {
         textArea.setText("");
         activityDTOList.forEach(activityDTO -> textArea.append(
                 "Activité : " + activityDTO.getName() + "\n"
-                + "Durée : " + activityDTO.getDuration() + "\n"
-                + "RPE : " + activityDTO.getRpe() + "\n"
-                + "Charge : " + activityDTO.getCharge() + "\n"
-                + "Date : " + activityDTO.getDate() + "\n"
-                + "------------------------------------------------------\n"
+                        + "Durée : " + activityDTO.getDuration() + "\n"
+                        + "RPE : " + activityDTO.getRpe() + "\n"
+                        + "Charge : " + activityDTO.getCharge() + "\n"
+                        + "Date : " + activityDTO.getDate() + "\n"
+                        + "------------------------------------------------------\n"
         ));
     }
 
