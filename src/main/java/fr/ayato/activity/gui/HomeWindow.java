@@ -7,6 +7,7 @@ import java.awt.geom.RoundRectangle2D;
 
 public class HomeWindow extends JFrame {
     public HomeWindow() {
+        // Initialisation de la fenêtre
         super("Fenêtre d'accueil");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int screenHeightSize = tk.getScreenSize().height;
@@ -20,8 +21,10 @@ public class HomeWindow extends JFrame {
 
         Dimension buttonDimension = new Dimension(200, 50);
 
+        // Bouton pour créer un utilisateur
         JButton buttonUser = new JButton("Créer un utilisateur");
         buttonUser.setPreferredSize(buttonDimension);
+        // Action lors du clic sur le bouton -> ouverture de la fenêtre de création d'utilisateur
         buttonUser.addActionListener(e -> {
             new CreateUserWindow();
             dispose();
@@ -45,10 +48,13 @@ public class HomeWindow extends JFrame {
                 super.paint(g, c);
             }
         });
+        // On ajoute le bouton à la fenêtre
         contentPane.add(buttonUser, BorderLayout.NORTH);
 
+        // Bouton pour lister les activités
         JButton buttonListActivities = new JButton("Lister les activités");
         buttonListActivities.setPreferredSize(buttonDimension);
+        // Action lors du clic sur le bouton -> ouverture de la fenêtre de liste des activités
         buttonListActivities.addActionListener(e -> {
             new ActivityListWindow();
             dispose();
@@ -72,10 +78,13 @@ public class HomeWindow extends JFrame {
                 super.paint(g, c);
             }
         });
+        // On ajoute le bouton à la fenêtre
         contentPane.add(buttonListActivities, BorderLayout.CENTER);
 
+        // Bouton pour créer une activité
         JButton buttonCreateActivity = new JButton("Créer une activité");
         buttonCreateActivity.setPreferredSize(buttonDimension);
+        // Action lors du clic sur le bouton -> ouverture de la fenêtre de création d'activité
         buttonCreateActivity.addActionListener(e -> {
             new CreateActivityWindow();
             dispose();
@@ -99,6 +108,7 @@ public class HomeWindow extends JFrame {
                 super.paint(g, c);
             }
         });
+        // On ajoute le bouton à la fenêtre
         contentPane.add(buttonCreateActivity, BorderLayout.SOUTH);
 
         pack();
