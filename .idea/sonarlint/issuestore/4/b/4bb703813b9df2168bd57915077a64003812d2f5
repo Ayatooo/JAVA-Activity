@@ -1,0 +1,21 @@
+
+b
+java:S1192&"GDefine a constant instead of duplicating this literal "Fermer" 4 times.(àÜºğøÿÿÿÿ
+d
+java:S3252-"IUse static access with "javax.swing.WindowConstants" for "EXIT_ON_CLOSE".(Õû»öşÿÿÿÿ
+n
+java:S1450A"SRemove the "date" field and declare it as a local variable in the relevant methods.(§ó®Øıÿÿÿÿ
+r
+java:S1450@"WRemove the "duration" field and declare it as a local variable in the relevant methods.(Ø¯µˆıÿÿÿÿ
+o
+java:S1450C"TRemove the "marge" field and declare it as a local variable in the relevant methods.(ÑÃã”şÿÿÿÿ
+i
+java:S1450?"SRemove the "name" field and declare it as a local variable in the relevant methods.(Ë¥¼
+m
+java:S1450B"RRemove the "rpe" field and declare it as a local variable in the relevant methods.(™Ëˆîûÿÿÿÿ
+U
+java:S1854j":Remove this useless assignment to local variable "window".(ñøĞÌùÿÿÿÿ
+F
+java:S1481j"+Remove this unused "window" local variable.(ñøĞÌùÿÿÿÿ
+C
+java:S1068A"(Remove this unused "date" private field.(§ó®Øıÿÿÿÿ
