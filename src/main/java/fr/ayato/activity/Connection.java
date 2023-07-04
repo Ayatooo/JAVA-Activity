@@ -14,9 +14,9 @@ public class Connection {
         try {
             Dotenv dotenv = Dotenv.configure().load();
             String connectionString = dotenv.get("MONGODB_URI");
+            assert connectionString != null;
             MongoClient client = MongoClients.create(connectionString);
-            MongoCollection<Document> collection = client.getDatabase(databaseName).getCollection(collectionName);
-            return collection;
+            return client.getDatabase(databaseName).getCollection(collectionName);
         } catch (Exception e) {
             log.error("Error while connecting to MongoDB", e);
             throw new RuntimeException(e);

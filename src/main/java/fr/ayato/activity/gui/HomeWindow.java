@@ -2,11 +2,9 @@ package fr.ayato.activity.gui;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
-public class Home extends JFrame {
-    public Home(){
+public class HomeWindow extends JFrame {
+    public HomeWindow(){
         super("Fenêtre d'accueil");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int screenHeightSize = tk.getScreenSize().height;
@@ -22,34 +20,25 @@ public class Home extends JFrame {
 
         JButton buttonUser = new JButton("Créer un utilisateur");
         buttonUser.setPreferredSize(buttonDimension);
-        buttonUser.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new WindowCreateUser();
-                dispose();  // Ferme la fenêtre Home
-            }
+        buttonUser.addActionListener(e -> {
+            new CreateUserWindow();
+            dispose();
         });
         contentPane.add(buttonUser, BorderLayout.NORTH);
 
         JButton buttonListActivities = new JButton("Lister les activités");
         buttonListActivities.setPreferredSize(buttonDimension);
-        buttonListActivities.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new WindowListActivities();
-                dispose();  // Ferme la fenêtre Home
-            }
+        buttonListActivities.addActionListener(e -> {
+            new ActivityListWindow();
+            dispose();
         });
         contentPane.add(buttonListActivities, BorderLayout.CENTER);
 
         JButton buttonCreateActivity = new JButton("Créer une activité");
         buttonCreateActivity.setPreferredSize(buttonDimension);
-        buttonCreateActivity.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new WindowCreateActivity();
-                dispose();  // Ferme la fenêtre Home
-            }
+        buttonCreateActivity.addActionListener(e -> {
+            new CreateActivityWindow();
+            dispose();
         });
         contentPane.add(buttonCreateActivity, BorderLayout.SOUTH);
 
@@ -57,7 +46,4 @@ public class Home extends JFrame {
         setVisible(true);
     }
 
-    public static void main(String[] args) {
-        JFrame window = new Home();
-    }
 }

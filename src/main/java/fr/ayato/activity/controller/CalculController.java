@@ -5,7 +5,9 @@ import fr.ayato.activity.model.ActivityDTO;
 import java.util.List;
 
 public interface CalculController {
-    int calculatTotalLoad(List<ActivityDTO> activityDTOList);
-    double calculateMonotony(List<ActivityDTO> filteredList);
-    double calculateAverageDailyTrainingLoad(List<ActivityDTO> filteredList);
+    int calculateTotalLoad(List<ActivityDTO> activityDTOList);
+    double calculateAverageLoad(List<ActivityDTO> activityDTOList);
+    double calculateMonotony(List<ActivityDTO> activityDTOList);
+    double calculateConstraint(int totalLoad, double monotony);
+    double calculateFitness(int totalLoad, double constraint);
 }

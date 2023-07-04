@@ -21,11 +21,11 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Slf4j
-public class WindowCreateUser extends JFrame {
+public class CreateUserWindow extends JFrame {
     UserForm userForm;
 
 
-    public WindowCreateUser(){
+    public CreateUserWindow(){
         super("Petite fenêtre bien sympa");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int screenHeightSize = tk.getScreenSize().height;
@@ -47,12 +47,9 @@ public class WindowCreateUser extends JFrame {
 
         JButton buttonBack = new JButton("Retour");
         buttonBack.setPreferredSize(new Dimension(200, 50));
-        buttonBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Home();  // Ouvre la fenêtre Home
-                dispose();   // Ferme la fenêtre WindowCreateUser
-            }
+        buttonBack.addActionListener(e -> {
+            new HomeWindow();
+            dispose();
         });
         contentPane.add(buttonBack, BorderLayout.SOUTH);
 
@@ -61,15 +58,12 @@ public class WindowCreateUser extends JFrame {
         setVisible(true);
     }
 
-    class ButtonListener implements ActionListener {
+    static class ButtonListener implements ActionListener {
         Dotenv dotenv = Dotenv.configure().load();
         UserController userController;
         UserRepositoryImpl userRepository;
         MongoCollection<Document> collection;
-        private String name;
-        private String firstname;
         private String sexe;
-        private Date birthdate;
         UserForm userForm;
         JFrame frame;
 
@@ -81,17 +75,18 @@ public class WindowCreateUser extends JFrame {
             this.frame = frame;
         }
         public void actionPerformed(ActionEvent e) {
-            this.name = this.userForm.getTextFieldName().getText();
-            this.firstname = this.userForm.getTextFieldFirstName().getText();
+            String name = this.userForm.getTextFieldName().getText();
+            String firstname = this.userForm.getTextFieldFirstName().getText();
+            Date birthdate;
             try {
-                this.birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(this.userForm.getTextFieldDate().getText());
+                birthdate = new SimpleDateFormat("dd/MM/yyyy").parse(this.userForm.getTextFieldDate().getText());
             } catch (ParseException ex) {
                 throw new RuntimeException("Error during date conversion", ex);
             }
             if (this.userForm.getHommeRadioButton().isSelected() && this.userForm.getFemmeRadioButton().isSelected()){
-                JOptionPane optionPane = new JOptionPane("Veuillez ne selectionner qu'un seul sexe",JOptionPane.WARNING_MESSAGE);
+                JOptionPane optionPane = new JOptionPane("Veuillez ne sélectionner qu'un seul sexe",JOptionPane.WARNING_MESSAGE);
                 JDialog dialog = optionPane.createDialog("Warning!");
-                dialog.setAlwaysOnTop(true); // to show top of all other application
+                dialog.setAlwaysOnTop(true);
                 dialog.setVisible(true);
             } else if (this.userForm.getHommeRadioButton().isSelected()) {
                 this.sexe = "Homme";
@@ -99,9 +94,9 @@ public class WindowCreateUser extends JFrame {
                 this.sexe = "Femme";
             }
             UserDTO user = new UserDTO(
-                    this.name,
-                    this.firstname,
-                    this.birthdate,
+                    name,
+                    firstname,
+                    birthdate,
                     this.sexe
             );
             String id = userController.saveUser(user);
@@ -112,7 +107,7 @@ public class WindowCreateUser extends JFrame {
             JLabel label = new JLabel("User créé avec succès");
             JButton button = new JButton("Fermer");
             button.setActionCommand("Fermer");
-            button.addActionListener(new ButtonDialogListner(dialog, this.frame));
+            button.addActionListener(new ButtonDialogListener(dialog, this.frame));
             panel.add(label);
             panel.add(button);
             dialog.add(panel);
@@ -121,10 +116,10 @@ public class WindowCreateUser extends JFrame {
         }
     }
 
-    class ButtonDialogListner implements ActionListener {
+    static class ButtonDialogListener implements ActionListener {
         JDialog dialog;
         JFrame window;
-        public ButtonDialogListner(JDialog dialog, JFrame window) {
+        public ButtonDialogListener(JDialog dialog, JFrame window) {
             this.dialog = dialog;
             this.window = window;
         }
@@ -132,12 +127,12 @@ public class WindowCreateUser extends JFrame {
             if(e.getActionCommand().equals("Fermer")){
                 this.window.dispose();
                 this.dialog.dispose();
-                JFrame window = new WindowCreateUser();
+                new CreateUserWindow();
             }
         }
     }
 
-    class RadioButtonListener implements ItemListener {
+    static class RadioButtonListener implements ItemListener {
         UserForm userForm;
         JRadioButton hommeRadioButton;
         JRadioButton femmeRadioButton;
@@ -160,8 +155,4 @@ public class WindowCreateUser extends JFrame {
         }
     }
 
-
-    public static void main(String[] args) {
-        JFrame window = new WindowCreateUser();
-    }
 }

@@ -6,22 +6,35 @@ import fr.ayato.activity.services.CalculService;
 import java.util.List;
 
 public class CalculControllerImpl implements CalculController {
+
     CalculService calculService;
-    @Override
-    public int calculatTotalLoad(List<ActivityDTO> activityDTOList) {
+
+    public CalculControllerImpl() {
         this.calculService = new CalculService();
-        return this.calculService.totalLoadCalcul(activityDTOList);
+    }
+
+    @Override
+    public int calculateTotalLoad(List<ActivityDTO> activityDTOList) {
+        return this.calculService.calculateTotalLoad(activityDTOList);
     }
 
     @Override
     public double calculateMonotony(List<ActivityDTO> filteredList) {
-        this.calculService = new CalculService();
-        return this.calculService.monotonyCalcul(filteredList);
+        return this.calculService.calculateMonotony(filteredList);
     }
 
     @Override
-    public double calculateAverageDailyTrainingLoad(List<ActivityDTO> filteredList) {
-        this.calculService = new CalculService();
-        return this.calculService.averageDailyTrainingLoadCalcul(filteredList);
+    public double calculateAverageLoad(List<ActivityDTO> filteredList) {
+        return this.calculService.calculateAverageLoad(filteredList);
+    }
+
+    @Override
+    public double calculateConstraint(int totalLoad, double monotony) {
+        return this.calculService.calculateConstraint(totalLoad, monotony);
+    }
+
+    @Override
+    public double calculateFitness(int totalLoad, double constraint) {
+        return this.calculService.calculateFitness(totalLoad, constraint);
     }
 }

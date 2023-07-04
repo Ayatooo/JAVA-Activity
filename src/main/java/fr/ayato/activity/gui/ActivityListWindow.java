@@ -3,7 +3,6 @@ package fr.ayato.activity.gui;
 import com.mongodb.client.MongoCollection;
 import fr.ayato.activity.Connection;
 import fr.ayato.activity.controller.ActivityControllerImpl;
-import fr.ayato.activity.controller.CalculController;
 import fr.ayato.activity.controller.CalculControllerImpl;
 import fr.ayato.activity.model.ActivityDTO;
 import fr.ayato.activity.repository.ActivityRepositoryImpl;
@@ -13,8 +12,6 @@ import org.bson.Document;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
@@ -22,19 +19,17 @@ import java.util.List;
 import static fr.ayato.activity.mapper.ActivityMapper.documentToActivity;
 
 @Slf4j
-public class WindowListActivities extends JFrame {
+public class ActivityListWindow extends JFrame {
 
     Dotenv dotenv = Dotenv.configure().load();
     private final ActivityControllerImpl activityController;
-    private final ActivityRepositoryImpl activityRepository;
-    private final MongoCollection<Document> collection;
     private boolean ascendingOrder = true;
-    private CalculControllerImpl calculControllerImpl;
-    public WindowListActivities() {
-        super("Liste des activités");
+    private final CalculControllerImpl calculControllerImpl;
+    public ActivityListWindow() {
+        super("Liste des activités ✨");
         calculControllerImpl = new CalculControllerImpl();
-        this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
-        this.activityRepository = new ActivityRepositoryImpl(collection);
+        MongoCollection<Document> collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
+        ActivityRepositoryImpl activityRepository = new ActivityRepositoryImpl(collection);
         this.activityController = new ActivityControllerImpl(activityRepository);
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,12 +49,9 @@ public class WindowListActivities extends JFrame {
 
 
         JButton buttonBack = new JButton("Retour");
-        buttonBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Home();
-                dispose();
-            }
+        buttonBack.addActionListener(e -> {
+            new HomeWindow();
+            dispose();
         });
         contentPane.add(buttonBack, BorderLayout.SOUTH);
         JButton sortButton = new JButton("Trier par date");
@@ -68,7 +60,7 @@ public class WindowListActivities extends JFrame {
         JButton addButton = new JButton("Créer");
         addButton.addActionListener(e -> {
             dispose();
-            new WindowCreateActivity();
+            new CreateActivityWindow();
         });
 
         JButton filterButton = new JButton("Filtrer par semaine");
@@ -88,7 +80,6 @@ public class WindowListActivities extends JFrame {
 
     private void refreshActivityList(JTextArea textArea) {
         textArea.setText("");
-
         try {
             List<ActivityDTO> activityDTOList = getActivityList();
             displayActivities(textArea, activityDTOList);
@@ -134,9 +125,9 @@ public class WindowListActivities extends JFrame {
 
     private void sortActivitiesByDate(List<ActivityDTO> activityDTOList) {
         if (ascendingOrder) {
-            Collections.sort(activityDTOList, Comparator.comparing(ActivityDTO::getDate));
+            activityDTOList.sort(Comparator.comparing(ActivityDTO::getDate));
         } else {
-            Collections.sort(activityDTOList, Comparator.comparing(ActivityDTO::getDate).reversed());
+            activityDTOList.sort(Comparator.comparing(ActivityDTO::getDate).reversed());
         }
         ascendingOrder = !ascendingOrder;
     }
@@ -151,7 +142,7 @@ public class WindowListActivities extends JFrame {
             }
 
             Integer selectedWeekNumber = (Integer) JOptionPane.showInputDialog(this,
-                    "Sélectionnez le numéro de semaine :", "Filtrer par semaine",
+                    "Sélectionnez le numéro de semaine :", "Filtrer par semaine 🚩",
                     JOptionPane.QUESTION_MESSAGE, null, weekNumbers.toArray(), weekNumbers.get(0));
 
             if (selectedWeekNumber != null) {
@@ -175,18 +166,22 @@ public class WindowListActivities extends JFrame {
 
                 textArea.setText("");
                 if (filteredList.isEmpty()) {
-                    textArea.setText("Aucune activité trouvée pour la semaine sélectionnée.");
+                    textArea.setText("Aucune activité ❌");
                 } else {
                     displayActivities(textArea, filteredList);
 
-                    int totalLoad = this.calculControllerImpl.calculatTotalLoad(filteredList);
+                    int totalLoad = this.calculControllerImpl.calculateTotalLoad(filteredList);
                     double monotonie = this.calculControllerImpl.calculateMonotony(filteredList);
-                    double averageDailyTrainingLoad = this.calculControllerImpl.calculateAverageDailyTrainingLoad(filteredList);
+                    double averageDailyTrainingLoad = this.calculControllerImpl.calculateAverageLoad(filteredList);
+                    double constraint = this.calculControllerImpl.calculateConstraint(totalLoad, monotonie);
+                    double fitness = this.calculControllerImpl.calculateFitness(totalLoad, constraint);
 
                     textArea.append("\n");
                     textArea.append("Total Load: " + totalLoad + "\n");
                     textArea.append("Monotonie: " + monotonie + "\n");
-                    textArea.append("calcule de charge d entrainement quotidien moyen : " + averageDailyTrainingLoad + "\n");
+                    textArea.append("Contrainte: " + constraint + "\n");
+                    textArea.append("Fitness: " + fitness + "\n");
+                    textArea.append("Charge moyenne quotidienne " + averageDailyTrainingLoad + "\n");
                 }
 
             }
@@ -197,6 +192,6 @@ public class WindowListActivities extends JFrame {
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(WindowListActivities::new);
+        SwingUtilities.invokeLater(ActivityListWindow::new);
     }
 }

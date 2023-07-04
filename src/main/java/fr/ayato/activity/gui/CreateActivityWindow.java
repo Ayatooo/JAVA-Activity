@@ -21,9 +21,9 @@ import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 @Slf4j
-public class WindowCreateActivity extends JFrame {
-    public WindowCreateActivity(){
-        super("Petite fenêtre bien sympa");
+public class CreateActivityWindow extends JFrame {
+    public CreateActivityWindow(){
+        super("Création d'un entrainement");
         Toolkit tk = Toolkit.getDefaultToolkit();
         int screenHeightSize = tk.getScreenSize().height;
         int screenWidthSize = tk.getScreenSize().width;
@@ -38,27 +38,24 @@ public class WindowCreateActivity extends JFrame {
             activityForm.getComboBoxRpe().addItem(effort);
         }
         activityForm.getValiderButton().setActionCommand("Valider");
-        activityForm.getValiderButton().addActionListener(new ButtonFormListner(activityForm, this));
+        activityForm.getValiderButton().addActionListener(new ButtonFormListener(activityForm, this));
         activityForm.getFermerButton().setActionCommand("Fermer");
-        activityForm.getFermerButton().addActionListener(new ButtonListner());
+        activityForm.getFermerButton().addActionListener(new ButtonListener());
 
         contentPane.add(activityForm.getRootPanel(), BorderLayout.CENTER);
 
         JButton buttonBack = new JButton("Retour");
         buttonBack.setPreferredSize(new Dimension(200, 50));
-        buttonBack.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                new Home();  // Ouvre la fenêtre Home
-                dispose();   // Ferme la fenêtre WindowCreateUser
-            }
+        buttonBack.addActionListener(e -> {
+            new HomeWindow();
+            dispose();
         });
         contentPane.add(buttonBack, BorderLayout.SOUTH);
 
         setVisible(true);
     }
 
-    class ButtonListner implements ActionListener {
+    static class ButtonListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
             if(e.getActionCommand().equals("Fermer")){
                 System.exit(0);
@@ -66,19 +63,14 @@ public class WindowCreateActivity extends JFrame {
         }
     }
 
-    class ButtonFormListner implements ActionListener {
+    static class ButtonFormListener implements ActionListener {
         Dotenv dotenv = Dotenv.configure().load();
         ActivityControllerImpl activityController;
         ActivityRepositoryImpl activityRepository;
         MongoCollection<Document> collection;
         ActivityForm activityForm;
-        private String name;
-        private int duration;
-        private Date date;
-        private int rpe;
-        private int marge;
         JFrame frame;
-        public ButtonFormListner(ActivityForm activityForm, JFrame frame) {
+        public ButtonFormListener(ActivityForm activityForm, JFrame frame) {
             this.collection = Connection.client(this.dotenv.get("DB_NAME"), this.dotenv.get("DB_COLLECTION_ACT"));
             this.activityRepository = new ActivityRepositoryImpl(this.collection);
             this.activityController = new ActivityControllerImpl(this.activityRepository);
@@ -86,48 +78,46 @@ public class WindowCreateActivity extends JFrame {
             this.frame = frame;
         }
         public void actionPerformed(ActionEvent e) {
-            this.name = this.activityForm.getTextFieldName().getText();
-            this.duration = (int)this.activityForm.getSpinnerDuration().getValue();
+            String name = this.activityForm.getTextFieldName().getText();
+            int duration = (int) this.activityForm.getSpinnerDuration().getValue();
             String dateString = this.activityForm.getTextFieldDate().getText();
+            Date date;
             try {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate localDate = LocalDate.parse(dateString, dateFormatter);
-                this.date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
-                log.info("Date valide : " + this.date);
+                date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                log.info("Date valide : " + date);
             } catch (DateTimeParseException exception) {
                 log.error("Date invalide", exception);
                 return;
             }
-            this.rpe = this.activityForm.getComboBoxRpe().getSelectedIndex();
-            this.marge = this.rpe * this.duration;
+            int rpe = this.activityForm.getComboBoxRpe().getSelectedIndex();
+            int marge = rpe * duration;
 
             ActivityDTO activity = new ActivityDTO(
-                    this.name,
-                    this.duration,
-                    this.date,
-                    this.rpe,
-                    this.marge
+                    name,
+                    duration,
+                    date,
+                    rpe,
+                    marge
             );
             String id = activityController.saveActivity(activity);
-            log.info("Actvity created", id);
+            log.info("Activity created : " + id);
             JDialog dialog = new JDialog();
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Activité créée avec succès");
-            JButton button = new JButton("Fermer");
-            button.setActionCommand("Fermer");
-            button.addActionListener(new ButtonDialogListner(dialog, this.frame));
             panel.add(label);
-            panel.add(button);
+            panel.add(new Buttons().Close(dialog, frame));
             dialog.add(panel);
             dialog.setSize(200, 100);
             dialog.setVisible(true);
         }
     }
 
-    class ButtonDialogListner implements ActionListener {
+    static class ButtonDialogListener implements ActionListener {
         JDialog dialog;
         JFrame window;
-        public ButtonDialogListner(JDialog dialog, JFrame window) {
+        public ButtonDialogListener(JDialog dialog, JFrame window) {
             this.dialog = dialog;
             this.window = window;
         }
@@ -135,12 +125,8 @@ public class WindowCreateActivity extends JFrame {
             if(e.getActionCommand().equals("Fermer")){
                 this.window.dispose();
                 this.dialog.dispose();
-                JFrame window = new WindowCreateActivity();
+                new CreateActivityWindow();
             }
         }
-    }
-
-    public static void main(String[] args) {
-        JFrame window = new WindowCreateActivity();
     }
 }

@@ -1,61 +1,99 @@
 package fr.ayato.activity.services;
 
 import fr.ayato.activity.model.ActivityDTO;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.*;
 
+@Slf4j
 public class CalculService {
-    public int totalLoadCalcul(List<ActivityDTO> activityDTOList){
+
+    /**
+     * Charge totale hebdomadaire
+     */
+    public int calculateTotalLoad(List<ActivityDTO> activityDTOList) {
         int totalLoad = 0;
 
         for (ActivityDTO activityDTO : activityDTOList) {
             int duration = activityDTO.getDuration();
             int rpe = activityDTO.getRpe();
-            int load = duration * rpe;
+            int charge = duration * rpe;
 
-            totalLoad += load;
+            totalLoad += charge;
         }
 
         return totalLoad;
     }
 
-    public double monotonyCalcul(List<ActivityDTO> filteredList) {
-        int totalDuration = 0;
-        int totalCharge = 0;
+    /**
+     * Charge totale moyenne par semaine
+     */
+    public double calculateAverageLoad(List<ActivityDTO> activityDTOList) {
+        int totalLoad = calculateTotalLoad(activityDTOList);
+        int numberOfDays = getNumberOfDaysInWeek(activityDTOList);
 
-        for (ActivityDTO activityDTO : filteredList) {
-            int duration = activityDTO.getDuration();
-            int rpe = activityDTO.getRpe();
-            int charge = duration * rpe;
-
-            totalDuration += duration;
-            totalCharge += charge;
-        }
-
-        double monotony = totalCharge / Math.sqrt(totalDuration);
-
-        return monotony;
+        return totalLoad / (double) numberOfDays;
     }
 
-    public double averageDailyTrainingLoadCalcul(List<ActivityDTO> filteredList) {
-        int totalCharge = 0;
-        Set<Date> trainingDays = new HashSet<>();
+    /**
+     * Monotonie
+     */
+    public double calculateMonotony(List<ActivityDTO> activityDTOList) {
+        int totalLoad = calculateTotalLoad(activityDTOList);
+        double ecartType = ecartType(activityDTOList);
 
-        for (ActivityDTO activityDTO : filteredList) {
-            int duration = activityDTO.getDuration();
-            int rpe = activityDTO.getRpe();
-            int charge = duration * rpe;
-
-            totalCharge += charge;
-            trainingDays.add(activityDTO.getDate());
-        }
-
-        int numberOfDays = getNumberOfDaysInWeek(filteredList);
-        double averageDailyTrainingLoad = totalCharge / (double) numberOfDays;
-
-        return averageDailyTrainingLoad;
+        return totalLoad / ecartType;
     }
 
+    /**
+     * Contrainte
+     */
+    public double calculateConstraint(int totalLoad, double monotony) {
+        return totalLoad * monotony;
+    }
+
+    /**
+     * Fitness
+     */
+    public double calculateFitness(int totalLoad, double constraint) {
+        return totalLoad - constraint;
+    }
+
+    // ----------------------------------------------------------
+    // Utils
+    //-----------------------------------------------------------
+
+    /**
+     * Charge totale hebdomadaire
+     */
+    private double averageDailyLoad(List<ActivityDTO> activityDTOList) {
+        int totalLoad = calculateTotalLoad(activityDTOList);
+        int numberOfDays = getNumberOfDaysInWeek(activityDTOList);
+        return totalLoad / (double) numberOfDays;
+    }
+
+    /**
+     * Ecart type
+     */
+    private double ecartType(List<ActivityDTO> activityDTOList) {
+        int[] dailyCharges = activityDTOList.stream().mapToInt(ActivityDTO::getCharge).toArray();
+        double averageCharges = averageDailyLoad(activityDTOList);
+
+        double sumSquareDifference = 0.0;
+        for (double charge : dailyCharges) {
+            double diff = charge - averageCharges;
+            double squareDiff = diff * diff;
+            sumSquareDifference += squareDiff;
+        }
+
+        double sumSquareDiff = sumSquareDifference / dailyCharges.length;
+        return Math.sqrt(sumSquareDiff);
+    }
+
+
+    /**
+     * Nombre de jours dans la semaine
+     */
     private int getNumberOfDaysInWeek(List<ActivityDTO> activityDTOList) {
         Set<Date> allDays = new HashSet<>();
 
@@ -77,51 +115,6 @@ public class CalculService {
         }
 
         return numberOfDays;
-    }
-
-    /*    private double calculateACWR(List<ActivityDTO> currentWeekActivities, List<ActivityDTO> previousFourWeeksActivities) {
-        int currentWeekLoad = calculateTotalLoad(currentWeekActivities);
-        double averageFourWeeksLoad = calculateAverageLoad(previousFourWeeksActivities);
-
-        double acwr = currentWeekLoad / averageFourWeeksLoad;
-
-        return acwr;
-    }*/
-
-    private double calculateAverageLoad(List<ActivityDTO> activityDTOList) {
-        int totalLoad = 0;
-
-        for (ActivityDTO activityDTO : activityDTOList) {
-            int duration = activityDTO.getDuration();
-            int rpe = activityDTO.getRpe();
-            int load = duration * rpe;
-
-            totalLoad += load;
-        }
-
-        double averageLoad = totalLoad / 4.0; // Divide by 4 weeks
-
-        return averageLoad;
-    }
-
-    private void calculateFitness(List<ActivityDTO> activityDTOList) {
-        int totalDuration = 0;
-        int totalRPE = 0;
-        int totalCharge = 0;
-
-        for (ActivityDTO activityDTO : activityDTOList) {
-            int duration = activityDTO.getDuration();
-            int rpe = activityDTO.getRpe();
-            int charge = duration * rpe;
-
-            totalDuration += duration;
-            totalRPE += rpe;
-            totalCharge += charge;
-        }
-
-        System.out.println("Total Duration: " + totalDuration);
-        System.out.println("Total RPE: " + totalRPE);
-        System.out.println("Total Charge: " + totalCharge);
     }
 
 }

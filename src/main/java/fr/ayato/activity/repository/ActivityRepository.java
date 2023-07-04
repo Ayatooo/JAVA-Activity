@@ -7,10 +7,7 @@ import org.bson.Document;
 
 public interface ActivityRepository {
     String save(ActivityDTO activityDTO);
-
     MongoCollection<Document> getAll();
-
     ActivityDTO getOne(String id);
-
     DeleteResult deleteOne(String id);
 }
