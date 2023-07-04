@@ -11,8 +11,9 @@ public class UserForm {
     private JPanel userPanel;
     private JTextField textFieldName;
     private JTextField textFieldFirstName;
-    private JTextField textField1;
+    private JTextField textFieldDate;
     private JRadioButton hommeRadioButton;
     private JRadioButton femmeRadioButton;
     private JButton createButton;
+    private ButtonGroup buttonGroupRadioButton;
 }
