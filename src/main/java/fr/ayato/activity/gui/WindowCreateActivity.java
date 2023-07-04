@@ -14,6 +14,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 
 @Slf4j
@@ -37,7 +41,6 @@ public class WindowCreateActivity extends JFrame {
         activityForm.getValiderButton().addActionListener(new ButtonFormListner(activityForm));
         activityForm.getFermerButton().setActionCommand("Fermer");
         activityForm.getFermerButton().addActionListener(new ButtonListner());
-
 
         contentPane.add(activityForm.getRootPanel(), BorderLayout.CENTER);
 
@@ -73,20 +76,28 @@ public class WindowCreateActivity extends JFrame {
         public void actionPerformed(ActionEvent e) {
             this.name = this.activityForm.getTextFieldName().getText();
             this.duration = (int)this.activityForm.getSpinnerDuration().getValue();
-            this.date = new Date();
+            String dateString = this.activityForm.getTextFieldDate().getText();
+            try {
+                DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+                LocalDate localDate = LocalDate.parse(dateString, dateFormatter);
+                this.date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                log.info("Date valide : " + this.date);
+            } catch (DateTimeParseException exception) {
+                log.error("Date invalide", exception);
+                return;
+            }
             this.rpe = this.activityForm.getComboBoxRpe().getSelectedIndex();
             this.marge = this.rpe * this.duration;
 
             ActivityDTO activity = new ActivityDTO(
                     this.name,
                     this.duration,
-                    new Date(),
+                    this.date,
                     this.rpe,
                     this.marge
             );
             String id = activityController.saveActivity(activity);
             log.info("Actvity created", id);
-
             JDialog dialog = new JDialog();
             JPanel panel = new JPanel();
             JLabel label = new JLabel("Activité créée avec succès");

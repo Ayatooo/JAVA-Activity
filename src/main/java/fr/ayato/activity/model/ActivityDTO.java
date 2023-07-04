@@ -27,6 +27,6 @@ public class ActivityDTO {
         this.duration = duration;
         this.date = date;
         this.rpe = rpe;
-        this.charge = charge;
+        this.charge = rpe * duration;
     }
 }
