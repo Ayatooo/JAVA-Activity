@@ -25,7 +25,7 @@ public class CalculControllerImpl implements CalculController {
 
     @Override
     public double calculateAverageLoad(List<ActivityDTO> filteredList) {
-        return this.calculService.calculateAverageLoad(filteredList);
+        return this.calculService.averageDailyLoad(filteredList);
     }
 
     @Override

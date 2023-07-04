@@ -26,16 +26,6 @@ public class CalculService {
     }
 
     /**
-     * Charge totale moyenne par semaine
-     */
-    public double calculateAverageLoad(List<ActivityDTO> activityDTOList) {
-        int totalLoad = calculateTotalLoad(activityDTOList);
-        int numberOfDays = getNumberOfDaysInWeek(activityDTOList);
-
-        return totalLoad / (double) numberOfDays;
-    }
-
-    /**
      * Monotonie
      */
     public double calculateMonotony(List<ActivityDTO> activityDTOList) {
@@ -66,7 +56,7 @@ public class CalculService {
     /**
      * Charge totale hebdomadaire
      */
-    private double averageDailyLoad(List<ActivityDTO> activityDTOList) {
+    public double averageDailyLoad(List<ActivityDTO> activityDTOList) {
         int totalLoad = calculateTotalLoad(activityDTOList);
         int numberOfDays = getNumberOfDaysInWeek(activityDTOList);
         return totalLoad / (double) numberOfDays;
@@ -77,7 +67,7 @@ public class CalculService {
      */
     private double ecartType(List<ActivityDTO> activityDTOList) {
         int[] dailyCharges = activityDTOList.stream().mapToInt(ActivityDTO::getCharge).toArray();
-        double averageCharges = averageDailyLoad(activityDTOList);
+        double averageCharges = this.averageDailyLoad(activityDTOList);
 
         double sumSquareDifference = 0.0;
         for (double charge : dailyCharges) {

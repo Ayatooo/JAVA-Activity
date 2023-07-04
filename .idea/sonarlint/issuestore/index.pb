@@ -18,5 +18,3 @@ j
 :src/main/java/fr/ayato/activity/mapper/ActivityMapper.java,a\6\a6481ec3737fb035f5208c82e0360e6fa60f3328
 Y
 )src/main/java/fr/ayato/activity/Main.java,7\5\7548e46a93864cc84907bf8d861a9e88902afb5a
-k
-;src/main/java/fr/ayato/activity/services/CalculService.java,2\8\288ef0e1f148e9d97394d03e8b3afec227bef04f
