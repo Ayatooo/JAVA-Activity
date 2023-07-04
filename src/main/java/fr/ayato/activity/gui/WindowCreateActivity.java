@@ -44,6 +44,16 @@ public class WindowCreateActivity extends JFrame {
 
         contentPane.add(activityForm.getRootPanel(), BorderLayout.CENTER);
 
+        JButton buttonBack = new JButton("Retour");
+        buttonBack.setPreferredSize(new Dimension(200, 50));
+        buttonBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Home();  // Ouvre la fenêtre Home
+                dispose();   // Ferme la fenêtre WindowCreateUser
+            }
+        });
+        contentPane.add(buttonBack, BorderLayout.SOUTH);
 
         setVisible(true);
     }

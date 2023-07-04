@@ -11,6 +11,9 @@ import org.bson.Document;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.*;
 import java.util.List;
 
@@ -46,6 +49,17 @@ public class WindowListActivities extends JFrame {
         JButton refreshButton = new JButton("Actualiser");
         refreshButton.addActionListener(e -> refreshActivityList(textArea));
 
+
+        JButton buttonBack = new JButton("Retour");
+        buttonBack.setPreferredSize(new Dimension(200, 50));
+        buttonBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Home();
+                dispose();
+            }
+        });
+        contentPane.add(buttonBack, BorderLayout.SOUTH);
         JButton sortButton = new JButton("Trier par date");
         sortButton.addActionListener(e -> sortActivitiesByDate(textArea));
 
@@ -66,7 +80,6 @@ public class WindowListActivities extends JFrame {
         contentPane.add(buttonPanel, BorderLayout.SOUTH);
 
         refreshActivityList(textArea);
-
         setVisible(true);
     }
 
