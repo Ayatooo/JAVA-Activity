@@ -1,0 +1,25 @@
+
+b
+java:S1192*"GDefine a constant instead of duplicating this literal "Fermer" 5 times.(àÜºğøÿÿÿÿ
+>
+java:S16041"(Make this anonymous inner class a lambda(®¯ÇÛ
+n
+java:S1450M"SRemove the "date" field and declare it as a local variable in the relevant methods.(§ó®Øıÿÿÿÿ
+r
+java:S1450L"WRemove the "duration" field and declare it as a local variable in the relevant methods.(Ø¯µˆıÿÿÿÿ
+o
+java:S1450O"TRemove the "marge" field and declare it as a local variable in the relevant methods.(ÑÃã”şÿÿÿÿ
+i
+java:S1450K"SRemove the "name" field and declare it as a local variable in the relevant methods.(Ë¥¼
+m
+java:S1450N"RRemove the "rpe" field and declare it as a local variable in the relevant methods.(™Ëˆîûÿÿÿÿ
+Q
+java:S1854Š":Remove this useless assignment to local variable "window".(êªúä
+R
+java:S1117Š";Rename "window" which hides the field declared at line 129.(êªúä
+B
+java:S1481Š"+Remove this unused "window" local variable.(êªúä
+Q
+java:S1854":Remove this useless assignment to local variable "window".(êªúä
+B
+java:S1481"+Remove this unused "window" local variable.(êªúä

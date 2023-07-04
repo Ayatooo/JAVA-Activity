@@ -1,0 +1,15 @@
+
+b
+java:S1192a"GDefine a constant instead of duplicating this literal "Erreur" 3 times.(áùÎœşÿÿÿÿ
+>
+java:S16049"(Make this anonymous inner class a lambda(®¯ÇÛ
+C
+java:S1948"(Make "dotenv" transient or serializable.(ÿ£‘üıÿÿÿÿ
+I
+java:S1948"4Make "activityController" transient or serializable.(ÿÃô
+J
+java:S1948"4Make "activityRepository" transient or serializable.(½‹ÇÛ
+G
+java:S1948",Make "collection" transient or serializable.(òıïıÿÿÿÿ
+d
+java:S3252("IUse static access with "javax.swing.WindowConstants" for "EXIT_ON_CLOSE".(Õû»öşÿÿÿÿ
