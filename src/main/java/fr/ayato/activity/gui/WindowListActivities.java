@@ -11,6 +11,8 @@ import org.bson.Document;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,9 +56,18 @@ public class WindowListActivities extends JFrame {
         refreshButton.addActionListener(e -> refreshActivityList(textArea));
         contentPane.add(refreshButton, BorderLayout.SOUTH);
 
+        JButton buttonBack = new JButton("Retour");
+        buttonBack.setPreferredSize(new Dimension(200, 50));
+        buttonBack.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new Home();  // Ouvre la fenêtre Home
+                dispose();   // Ferme la fenêtre WindowCreateUser
+            }
+        });
+        contentPane.add(buttonBack, BorderLayout.SOUTH);
 
         refreshActivityList(textArea);
-
         setVisible(true);
     }
 
