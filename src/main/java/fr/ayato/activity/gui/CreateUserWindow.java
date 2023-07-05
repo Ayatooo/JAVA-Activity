@@ -24,7 +24,6 @@ import java.util.Date;
 public class CreateUserWindow extends JFrame {
     UserForm userForm;
 
-
     public CreateUserWindow(){
         super("Petite fenêtre bien sympa");
         Toolkit tk = Toolkit.getDefaultToolkit();
@@ -154,5 +153,4 @@ public class CreateUserWindow extends JFrame {
             }
         }
     }
-
 }
