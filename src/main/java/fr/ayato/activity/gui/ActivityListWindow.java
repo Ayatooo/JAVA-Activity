@@ -146,8 +146,6 @@ public class ActivityListWindow extends JFrame {
     // On filtre les activités par semaine de l'année
     private void filterActivitiesByWeek(JTextPane textPane) {
         try {
-            int currentYear = Calendar.getInstance().get(Calendar.YEAR);
-
             List<Integer> weekNumbers = new ArrayList<>();
             for (int i = 1; i <= 52; i++) {
                 weekNumbers.add(i);
@@ -161,8 +159,7 @@ public class ActivityListWindow extends JFrame {
             // Si on a sélectionné une semaine, on filtre les activités
             if (selectedWeekNumber != null) {
 
-                List<ActivityDTO> activityDTOList = getActivityList();
-                List<ActivityDTO> filteredList = new ArrayList<>();
+                List<ActivityDTO> filteredList;
                 filteredList = filterActivitiesByWeekNumber(selectedWeekNumber);
 
                 log.info("Filtering activities by week...");
