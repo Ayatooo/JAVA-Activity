@@ -3,6 +3,7 @@ package fr.ayato.activity.controller;
 import fr.ayato.activity.model.ActivityDTO;
 import fr.ayato.activity.services.CalculService;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CalculControllerImpl implements CalculController {
@@ -14,8 +15,8 @@ public class CalculControllerImpl implements CalculController {
     }
 
     @Override
-    public int calculateTotalLoad(List<ActivityDTO> activityDTOList) {
-        return this.calculService.calculateTotalLoad(activityDTOList);
+    public int calculateChargeAigue(List<ActivityDTO> activityDTOList) {
+        return this.calculService.calculateChargeAigue(activityDTOList);
     }
 
     @Override
@@ -41,5 +42,15 @@ public class CalculControllerImpl implements CalculController {
     @Override
     public List<ActivityDTO> formattedWeekTrain(List<ActivityDTO> activityDTOList) {
         return this.calculService.formattedWeekTrain(activityDTOList);
+    }
+
+    @Override
+    public double calculateAcwr(int chargeAigue, int chargeChronique) {
+        return this.calculService.calculateAcwr(chargeAigue, chargeChronique);
+    }
+
+    @Override
+    public ArrayList<String> calculateHealthIndicator(double monotony, double constraint, double acwr) {
+        return this.calculService.calculateHealthIndicator(monotony, constraint, acwr);
     }
 }

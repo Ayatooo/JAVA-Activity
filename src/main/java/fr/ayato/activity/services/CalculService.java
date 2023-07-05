@@ -11,7 +11,7 @@ public class CalculService {
     /**
      * Charge totale hebdomadaire
      */
-    public int calculateTotalLoad(List<ActivityDTO> activityDTOList) {
+    public int calculateChargeAigue(List<ActivityDTO> activityDTOList) {
         int totalLoad = 0;
 
         for (ActivityDTO activityDTO : activityDTOList) {
@@ -26,7 +26,7 @@ public class CalculService {
     }
 
     /**
-     * Monotonie
+     * Monotony
      */
     public double calculateMonotony(List<ActivityDTO> activityDTOList, List<ActivityDTO> formattedWeekTrain) {
         double ceqm = averageDailyLoad(activityDTOList);
@@ -49,6 +49,35 @@ public class CalculService {
         return totalLoad - constraint;
     }
 
+    /**
+     * AWCR
+     */
+    public double calculateAcwr(int chargeAigue, int chargeChronique) {
+        return (double) chargeAigue / chargeChronique;
+    }
+
+    /**
+     * Get Health Indicator
+     */
+    public ArrayList<String> calculateHealthIndicator(double monotony, double constraint, double acwr) {
+        ArrayList<String> healthIndicator = new ArrayList<>();
+        if (monotony < 2 && constraint < 6000 && 0.8 < acwr && acwr < 1.3) {
+            healthIndicator.add("green");
+            healthIndicator.add("Entrainement optimal ✨");
+        } else if ((monotony >= 2 && monotony < 2.5) || (constraint >= 6000 && constraint < 10000)) {
+            healthIndicator.add("orange");
+            healthIndicator.add("Etat de fatigue 🥵");
+        } else if (monotony >= 2.5 || constraint >= 10000 || acwr >= 1.5) {
+            healthIndicator.add("red");
+            healthIndicator.add("Attention risque de blessure 🚑");
+        } else {
+            healthIndicator.add("blue");
+            healthIndicator.add("RAS");
+        }
+        return healthIndicator;
+    }
+
+
     // ----------------------------------------------------------
     // Utils
     //-----------------------------------------------------------
@@ -57,7 +86,7 @@ public class CalculService {
      * Charge totale hebdomadaire
      */
     public double averageDailyLoad(List<ActivityDTO> activityDTOList) {
-        int totalLoad = calculateTotalLoad(activityDTOList);
+        int totalLoad = calculateChargeAigue(activityDTOList);
         return totalLoad / 7.0;
     }
 

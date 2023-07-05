@@ -160,39 +160,26 @@ public class ActivityListWindow extends JFrame {
 
             // Si on a sélectionné une semaine, on filtre les activités
             if (selectedWeekNumber != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.set(Calendar.YEAR, currentYear);
-                log.info("Year: {}", currentYear);
-                calendar.set(Calendar.WEEK_OF_YEAR, selectedWeekNumber);
-                log.info("Selected week number: {}", selectedWeekNumber);
-                calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
-                calendar.set(Calendar.HOUR_OF_DAY, 0);
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
-                Date startDate = calendar.getTime();
-                log.info("Start date: {}", startDate);
-
-                calendar.add(Calendar.DAY_OF_WEEK, 6);
-                calendar.set(Calendar.HOUR_OF_DAY, 23);
-                calendar.set(Calendar.MINUTE, 59);
-                calendar.set(Calendar.SECOND, 59);
-                Date endDate = calendar.getTime();
-                log.info("End date: {}", endDate);
 
                 List<ActivityDTO> activityDTOList = getActivityList();
                 List<ActivityDTO> filteredList = new ArrayList<>();
+                filteredList = filterActivitiesByWeekNumber(selectedWeekNumber);
 
                 log.info("Filtering activities by week...");
 
-                // On filtre les activités par date
-                for (ActivityDTO activityDTO : activityDTOList) {
-                    Date activityDate = activityDTO.getDate();
-                    log.info("Activity date: {}", activityDate);
-                    if (activityDate.after(startDate) && activityDate.before(endDate)) {
-                        filteredList.add(activityDTO);
+                // On récupère les 4 dernières semaines
+                // Obtenir les numéros de semaine des trois semaines précédentes
+                List<Integer> fourWeekNumbers = new ArrayList<>();
+                for (int i = selectedWeekNumber - 3; i <= selectedWeekNumber; i++) {
+                    if (i > 0) {
+                        fourWeekNumbers.add(i);
                     }
                 }
-
+                List<ActivityDTO> last4Weeks = new ArrayList<>();
+                for (Integer week : fourWeekNumbers) {
+                    List<ActivityDTO> weekActivities = filterActivitiesByWeekNumber(week);
+                    last4Weeks.addAll(weekActivities);
+                }
                 // On affiche les activités filtrées
                 StringBuilder sb = new StringBuilder();
                 if (filteredList.isEmpty()) {
@@ -200,14 +187,36 @@ public class ActivityListWindow extends JFrame {
                 } else {
                     displayActivities(textPane, filteredList);
 
-                    int totalLoad = this.calculControllerImpl.calculateTotalLoad(filteredList);
+                    int chargeAigue = this.calculControllerImpl.calculateChargeAigue(filteredList);
+                    int chargeChronique = this.calculControllerImpl.calculateChargeAigue(last4Weeks);
+                    double acwr = this.calculControllerImpl.calculateAcwr(chargeAigue, chargeChronique);
                     List<ActivityDTO> formattedWeekTrain = this.calculControllerImpl.formattedWeekTrain(filteredList);
                     double monotonie = this.calculControllerImpl.calculateMonotony(filteredList, formattedWeekTrain);
                     double averageDailyTrainingLoad = this.calculControllerImpl.calculateAverageLoad(filteredList);
-                    double constraint = this.calculControllerImpl.calculateConstraint(totalLoad, monotonie);
-                    double fitness = this.calculControllerImpl.calculateFitness(totalLoad, constraint);
+                    double constraint = this.calculControllerImpl.calculateConstraint(chargeAigue, monotonie);
+                    double fitness = this.calculControllerImpl.calculateFitness(chargeAigue, constraint);
+                    ArrayList<String> healthIndicator = this.calculControllerImpl.calculateHealthIndicator(monotonie, constraint, acwr);
+                    switch (healthIndicator.get(0)) {
+                        case "green":
+                            textPane.setBackground(Color.GREEN);
+                            break;
+                        case "orange":
+                            textPane.setBackground(Color.ORANGE);
+                            break;
+                        case "red":
+                            textPane.setBackground(Color.RED);
+                            break;
+                        case "blue":
+                            textPane.setBackground(Color.BLUE);
+                            break;
+                        default: textPane.setBackground(Color.WHITE);
+                    }
                     sb.append("\n");
-                    sb.append("Charge totale: ").append(totalLoad).append("\n");
+                    sb.append("Forme : ").append(healthIndicator.get(1)).append("\n");
+                    sb.append("\n");
+                    sb.append("Charge Aigue: ").append(chargeAigue).append("\n");
+                    sb.append("Charge chronique: ").append(chargeChronique).append("\n");
+                    sb.append("ACWR: ").append(acwr).append("\n");
                     sb.append("Monotonie: ").append(monotonie).append("\n");
                     sb.append("Contrainte: ").append(constraint).append("\n");
                     sb.append("Fitness: ").append(fitness).append("\n");
@@ -220,5 +229,34 @@ public class ActivityListWindow extends JFrame {
             log.error("Failed to filter activity list: {}", e.getMessage());
             JOptionPane.showMessageDialog(this, "Erreur lors du filtrage de la liste des activités.", "Erreur", JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    private List<ActivityDTO> filterActivitiesByWeekNumber(int weekNumber) {
+        List<ActivityDTO> activityDTOList = getActivityList();
+        List<ActivityDTO> filteredList = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.WEEK_OF_YEAR, weekNumber);
+        calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        Date startDate = calendar.getTime();
+
+        calendar.add(Calendar.DAY_OF_WEEK, 6);
+        calendar.set(Calendar.HOUR_OF_DAY, 23);
+        calendar.set(Calendar.MINUTE, 59);
+        calendar.set(Calendar.SECOND, 59);
+        Date endDate = calendar.getTime();
+
+        // Filtrer les activités par date
+        for (ActivityDTO activityDTO : activityDTOList) {
+            Date activityDate = activityDTO.getDate();
+            if (activityDate.after(startDate) && activityDate.before(endDate)) {
+                filteredList.add(activityDTO);
+            }
+        }
+
+        return filteredList;
     }
 }
