@@ -207,11 +207,11 @@ public class ActivityListWindow extends JFrame {
                     double constraint = this.calculControllerImpl.calculateConstraint(totalLoad, monotonie);
                     double fitness = this.calculControllerImpl.calculateFitness(totalLoad, constraint);
                     sb.append("\n");
-                    sb.append("Total Load: ").append(totalLoad).append("\n");
+                    sb.append("Charge totale: ").append(totalLoad).append("\n");
                     sb.append("Monotonie: ").append(monotonie).append("\n");
                     sb.append("Contrainte: ").append(constraint).append("\n");
                     sb.append("Fitness: ").append(fitness).append("\n");
-                    sb.append("Charge moyenne quotidienne ").append(averageDailyTrainingLoad).append("\n");
+                    sb.append("Charge moyenne quotidienne: ").append(averageDailyTrainingLoad).append("\n");
                 }
                 // On affiche les résultats dans une boîte de dialogue
                 JOptionPane.showMessageDialog(this, sb.toString(), "Résultats", JOptionPane.INFORMATION_MESSAGE);
