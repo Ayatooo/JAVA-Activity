@@ -121,7 +121,7 @@ public class CalculService {
     /**
      * Ecart type
      */
-    private double ecartType(List<ActivityDTO> activityDTOList) {
+    public double ecartType(List<ActivityDTO> activityDTOList) {
         // foreach activity, if the day is the same, add the charge to the daily charge
         int[] dailyCharges = activityDTOList.stream().mapToInt(ActivityDTO::getCharge).toArray();
         double sum = 0.0, standardDeviation = 0.0;
