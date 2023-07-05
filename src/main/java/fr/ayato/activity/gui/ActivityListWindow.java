@@ -197,19 +197,11 @@ public class ActivityListWindow extends JFrame {
                     double fitness = this.calculControllerImpl.calculateFitness(chargeAigue, constraint);
                     ArrayList<String> healthIndicator = this.calculControllerImpl.calculateHealthIndicator(monotonie, constraint, acwr);
                     switch (healthIndicator.get(0)) {
-                        case "green":
-                            textPane.setBackground(Color.GREEN);
-                            break;
-                        case "orange":
-                            textPane.setBackground(Color.ORANGE);
-                            break;
-                        case "red":
-                            textPane.setBackground(Color.RED);
-                            break;
-                        case "blue":
-                            textPane.setBackground(Color.BLUE);
-                            break;
-                        default: textPane.setBackground(Color.WHITE);
+                        case "green" -> textPane.setBackground(Color.GREEN);
+                        case "orange" -> textPane.setBackground(Color.ORANGE);
+                        case "red" -> textPane.setBackground(Color.RED);
+                        case "blue" -> textPane.setBackground(Color.BLUE);
+                        default -> textPane.setBackground(Color.WHITE);
                     }
                     sb.append("\n");
                     sb.append("Forme : ").append(healthIndicator.get(1)).append("\n");
