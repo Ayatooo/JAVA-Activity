@@ -86,6 +86,7 @@ public class ActivityListWindow extends JFrame {
 
     // On récupère la liste des activités et on l'affiche dans le JTextPane
     private void refreshActivityList(JTextPane textPane) {
+        textPane.setBackground(Color.WHITE);
         textPane.setText("");
         try {
             List<ActivityDTO> activityDTOList = getActivityList();
@@ -122,6 +123,7 @@ public class ActivityListWindow extends JFrame {
 
     // On trie les activités par date
     private void sortActivitiesByDate(JTextPane textPane) {
+        textPane.setBackground(Color.WHITE);
         textPane.setText("");
         try {
             List<ActivityDTO> activityDTOList = getActivityList();
