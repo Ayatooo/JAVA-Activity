@@ -28,11 +28,11 @@ public class CalculService {
     /**
      * Monotonie
      */
-    public double calculateMonotony(List<ActivityDTO> activityDTOList) {
-        int totalLoad = calculateTotalLoad(activityDTOList);
-        double ecartType = ecartType(activityDTOList);
+    public double calculateMonotony(List<ActivityDTO> activityDTOList, List<ActivityDTO> formattedWeekTrain) {
+        double ceqm = averageDailyLoad(activityDTOList);
+        double ecartType = ecartType(formattedWeekTrain);
 
-        return totalLoad / ecartType;
+        return ceqm / ecartType;
     }
 
     /**
@@ -61,22 +61,54 @@ public class CalculService {
         return totalLoad / 7.0;
     }
 
+    public List<ActivityDTO> formattedWeekTrain(List<ActivityDTO> activityDTOList) {
+        Map<Date, ActivityDTO> formattedMap = new HashMap<>();
+
+        for (ActivityDTO activityDTO : activityDTOList) {
+            Date activityDate = activityDTO.getDate();
+
+            // Récupérer la date du jour sans l'heure
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(activityDate);
+            Date dayDate = calendar.getTime();
+
+            // Vérifier si l'entraînement pour ce jour existe déjà dans le map
+            if (formattedMap.containsKey(dayDate)) {
+                // Ajouter la charge à l'entraînement existant
+                ActivityDTO existingActivity = formattedMap.get(dayDate);
+                existingActivity.setCharge(existingActivity.getCharge() + activityDTO.getCharge());
+            } else {
+                // Ajouter l'entraînement au map
+                formattedMap.put(dayDate, activityDTO);
+            }
+        }
+
+        // Créer une liste à partir des valeurs du map
+        List<ActivityDTO> formattedList = new ArrayList<>(formattedMap.values());
+
+        return formattedList;
+    }
+
     /**
      * Ecart type
      */
     private double ecartType(List<ActivityDTO> activityDTOList) {
+        // foreach activity, if the day is the same, add the charge to the daily charge
         int[] dailyCharges = activityDTOList.stream().mapToInt(ActivityDTO::getCharge).toArray();
-        double averageCharges = this.averageDailyLoad(activityDTOList);
+        double sum = 0.0, standardDeviation = 0.0;
+        int length = 7;
 
-        double sumSquareDifference = 0.0;
-        for (double charge : dailyCharges) {
-            double diff = charge - averageCharges;
-            double squareDiff = diff * diff;
-            sumSquareDifference += squareDiff;
+        for(double num : dailyCharges) {
+            sum += num;
         }
 
-        double sumSquareDiff = sumSquareDifference / dailyCharges.length;
-        return Math.sqrt(sumSquareDiff);
+        double mean = sum/length;
+
+        for(double num: dailyCharges) {
+            standardDeviation += Math.pow(num - mean, 2);
+        }
+
+        return Math.sqrt(standardDeviation/length);
     }
 
 }

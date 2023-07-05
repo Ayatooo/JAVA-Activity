@@ -201,11 +201,11 @@ public class ActivityListWindow extends JFrame {
                     displayActivities(textPane, filteredList);
 
                     int totalLoad = this.calculControllerImpl.calculateTotalLoad(filteredList);
-                    double monotonie = this.calculControllerImpl.calculateMonotony(filteredList);
+                    List<ActivityDTO> formattedWeekTrain = this.calculControllerImpl.formattedWeekTrain(filteredList);
+                    double monotonie = this.calculControllerImpl.calculateMonotony(filteredList, formattedWeekTrain);
                     double averageDailyTrainingLoad = this.calculControllerImpl.calculateAverageLoad(filteredList);
                     double constraint = this.calculControllerImpl.calculateConstraint(totalLoad, monotonie);
                     double fitness = this.calculControllerImpl.calculateFitness(totalLoad, constraint);
-
                     sb.append("\n");
                     sb.append("Total Load: ").append(totalLoad).append("\n");
                     sb.append("Monotonie: ").append(monotonie).append("\n");

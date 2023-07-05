@@ -19,8 +19,8 @@ public class CalculControllerImpl implements CalculController {
     }
 
     @Override
-    public double calculateMonotony(List<ActivityDTO> filteredList) {
-        return this.calculService.calculateMonotony(filteredList);
+    public double calculateMonotony(List<ActivityDTO> activityDTOList, List<ActivityDTO> formattedWeekTrain) {
+        return this.calculService.calculateMonotony(activityDTOList, formattedWeekTrain);
     }
 
     @Override
@@ -36,5 +36,10 @@ public class CalculControllerImpl implements CalculController {
     @Override
     public double calculateFitness(int totalLoad, double constraint) {
         return this.calculService.calculateFitness(totalLoad, constraint);
+    }
+
+    @Override
+    public List<ActivityDTO> formattedWeekTrain(List<ActivityDTO> activityDTOList) {
+        return this.calculService.formattedWeekTrain(activityDTOList);
     }
 }
