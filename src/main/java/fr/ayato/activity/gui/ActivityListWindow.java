@@ -162,19 +162,33 @@ public class ActivityListWindow extends JFrame {
             if (selectedWeekNumber != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.set(Calendar.YEAR, currentYear);
+                log.info("Year: {}", currentYear);
                 calendar.set(Calendar.WEEK_OF_YEAR, selectedWeekNumber);
+                log.info("Selected week number: {}", selectedWeekNumber);
                 calendar.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+                calendar.set(Calendar.HOUR_OF_DAY, 0);
+                calendar.set(Calendar.MINUTE, 0);
+                calendar.set(Calendar.SECOND, 0);
                 Date startDate = calendar.getTime();
+                log.info("Start date: {}", startDate);
+
                 calendar.add(Calendar.DAY_OF_WEEK, 6);
+                calendar.set(Calendar.HOUR_OF_DAY, 23);
+                calendar.set(Calendar.MINUTE, 59);
+                calendar.set(Calendar.SECOND, 59);
                 Date endDate = calendar.getTime();
+                log.info("End date: {}", endDate);
 
                 List<ActivityDTO> activityDTOList = getActivityList();
                 List<ActivityDTO> filteredList = new ArrayList<>();
 
+                log.info("Filtering activities by week...");
+
                 // On filtre les activités par date
                 for (ActivityDTO activityDTO : activityDTOList) {
                     Date activityDate = activityDTO.getDate();
-                    if (!activityDate.before(startDate) && !activityDate.after(endDate)) {
+                    log.info("Activity date: {}", activityDate);
+                    if (activityDate.after(startDate) && activityDate.before(endDate)) {
                         filteredList.add(activityDTO);
                     }
                 }

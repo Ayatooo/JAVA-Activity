@@ -58,8 +58,7 @@ public class CalculService {
      */
     public double averageDailyLoad(List<ActivityDTO> activityDTOList) {
         int totalLoad = calculateTotalLoad(activityDTOList);
-        int numberOfDays = getNumberOfDaysInWeek(activityDTOList);
-        return totalLoad / (double) numberOfDays;
+        return totalLoad / 7.0;
     }
 
     /**
@@ -78,33 +77,6 @@ public class CalculService {
 
         double sumSquareDiff = sumSquareDifference / dailyCharges.length;
         return Math.sqrt(sumSquareDiff);
-    }
-
-
-    /**
-     * Nombre de jours dans la semaine
-     */
-    private int getNumberOfDaysInWeek(List<ActivityDTO> activityDTOList) {
-        Set<Date> allDays = new HashSet<>();
-
-        for (ActivityDTO activityDTO : activityDTOList) {
-            allDays.add(activityDTO.getDate());
-        }
-
-        Calendar calendar = Calendar.getInstance();
-        calendar.setFirstDayOfWeek(Calendar.MONDAY);
-        calendar.setTime(Collections.min(allDays));
-        int startDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        calendar.setTime(Collections.max(allDays));
-        int endDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-        int numberOfDays = (endDayOfWeek - startDayOfWeek + 1) % 7;
-        if (numberOfDays < 0) {
-            numberOfDays += 7;
-        }
-
-        return numberOfDays;
     }
 
 }

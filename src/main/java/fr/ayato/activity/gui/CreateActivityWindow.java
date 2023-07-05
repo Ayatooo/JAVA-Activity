@@ -85,7 +85,7 @@ public class CreateActivityWindow extends JFrame {
             try {
                 DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
                 LocalDate localDate = LocalDate.parse(dateString, dateFormatter);
-                date = Date.from(localDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+                date = Date.from(localDate.atTime(10, 0).atZone(ZoneId.systemDefault()).toInstant());
                 log.info("Date valide : " + date);
             } catch (DateTimeParseException exception) {
                 log.error("Date invalide", exception);
